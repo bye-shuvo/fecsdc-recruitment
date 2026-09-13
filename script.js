@@ -141,6 +141,9 @@ const STEP_TITLES = {
   5: "Review & Final Confirmation"
 };
 
+// LocalStorage key for form progress
+const LS_KEY = 'fecsdc_form_progress';
+
 
 // =========================================================================
 // 3. INITIALIZATION & EVENT LISTENERS
@@ -154,6 +157,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initWizardNavigation();
   initFormSubmission();
   initResetHandler();
+  initFormAutoSave();
+  restoreFormState();
 });
 
 
@@ -767,6 +772,9 @@ function goToStep(step) {
   if (formCard) {
     formCard.scrollIntoView({ behavior: "smooth", block: "start" });
   }
+
+  // 8. Persist new step index to localStorage
+  saveFormState();
 }
 
 /**
@@ -1237,6 +1245,9 @@ function hideError() {
 }
 
 function showSuccessReceipt(data) {
+  // Clear localStorage on successful submit — prevent stale data for next applicant
+  clearFormState();
+
   form.style.display = "none";
   if (receiptCard) receiptCard.classList.add("is-visible");
 
@@ -1263,6 +1274,9 @@ function initResetHandler() {
   if (!btnReceiptReset) return;
 
   btnReceiptReset.addEventListener("click", () => {
+    // Clear localStorage before resetting
+    clearFormState();
+
     form.reset();
     clearSelectedPhoto();
     clearSelectedFile();
@@ -1296,3 +1310,171 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
+
+// =========================================================================
+// 12. LOCALSTORAGE PROGRESS PERSISTENCE
+// =========================================================================
+
+/**
+ * Reads all current form field values + active step and saves to localStorage.
+ * File inputs (photo/resume) are NOT stored (too large); only a boolean flag.
+ */
+function saveFormState() {
+  if (!form) return;
+  try {
+    const data = {
+      step: currentStep,
+      // Step 1
+      fullName:       (form.fullName       && form.fullName.value)       || '',
+      studentId:      (form.studentId      && form.studentId.value)      || '',
+      batch:          (form.batch          && form.batch.value)          || '',
+      gender:         (form.gender         && form.gender.value)         || '',
+      department:     (form.department     && form.department.value)     || '',
+      yearSemester:   (form.yearSemester   && form.yearSemester.value)   || '',
+      phone:          (form.phone          && form.phone.value)          || '',
+      email:          (form.email          && form.email.value)          || '',
+      // Step 2
+      techSkills:           getCheckboxValues('techSkills'),
+      otherTechSkillChecked: chkOtherTechSkill ? chkOtherTechSkill.checked : false,
+      otherTechSkillText:    (otherTechSkillInput && otherTechSkillInput.value) || '',
+      progLanguages:        getCheckboxValues('progLanguages'),
+      otherProgLangChecked:  chkOtherProgLang ? chkOtherProgLang.checked : false,
+      otherProgLangText:     (otherProgLangInput  && otherProgLangInput.value)  || '',
+      skillLevel:           (document.querySelector('input[name="skillLevel"]:checked') || {}).value || '',
+      // Step 3
+      softSkills:           getCheckboxValues('softSkills'),
+      otherSoftSkillChecked: chkOtherSoftSkill ? chkOtherSoftSkill.checked : false,
+      otherSoftSkillText:    (otherSoftSkillInput && otherSoftSkillInput.value) || '',
+      leadershipExp:        (document.querySelector('input[name="leadershipExp"]:checked') || {}).value || '',
+      leadershipDescVal:    (leadershipDesc && leadershipDesc.value) || '',
+      clubVolunteerExp:     (form.clubVolunteerExp && form.clubVolunteerExp.value) || '',
+      // Step 4
+      track:           (form.track          && form.track.value)          || '',
+      fecsdcKnowledge: (form.fecsdcKnowledge && form.fecsdcKnowledge.value) || '',
+      weeklyTime:      (form.weeklyTime      && form.weeklyTime.value)      || '',
+      whyJoin:         (form.whyJoin         && form.whyJoin.value)         || '',
+      portfolioUrl:    (form.portfolioUrl    && form.portfolioUrl.value)    || '',
+      // File presence flags (base64 not stored)
+      photoWasFilled:  !!selectedPhotoBase64,
+      resumeWasFilled: !!selectedResumeFile,
+    };
+    localStorage.setItem(LS_KEY, JSON.stringify(data));
+  } catch (e) {
+    // Silently ignore storage quota errors
+    console.warn('[FormState] Could not save to localStorage:', e);
+  }
+}
+
+/** Helper: returns array of checked values for a named checkbox group. */
+function getCheckboxValues(fieldName) {
+  return Array.from(document.querySelectorAll(`input[name="${fieldName}"]:checked`)).map(cb => cb.value);
+}
+
+/** Helper: checks checkboxes in a named group whose values are in the given array. */
+function restoreCheckboxGroup(fieldName, values) {
+  if (!values || !values.length) return;
+  document.querySelectorAll(`input[name="${fieldName}"]`).forEach(cb => {
+    cb.checked = values.includes(cb.value);
+  });
+}
+
+/**
+ * Reads localStorage, restores all field values, conditional visibility,
+ * and jumps to the last saved step.
+ */
+function restoreFormState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== 'object') return;
+
+    // --- Step 1 ---
+    if (form.fullName     && data.fullName)     form.fullName.value     = data.fullName;
+    if (form.studentId    && data.studentId)    form.studentId.value    = data.studentId;
+    if (form.batch        && data.batch)        form.batch.value        = data.batch;
+    if (form.gender       && data.gender)       form.gender.value       = data.gender;
+    if (form.department   && data.department)   form.department.value   = data.department;
+    if (form.yearSemester && data.yearSemester) form.yearSemester.value = data.yearSemester;
+    if (form.phone        && data.phone)        form.phone.value        = data.phone;
+    if (form.email        && data.email)        form.email.value        = data.email;
+
+    // --- Step 2 ---
+    restoreCheckboxGroup('techSkills', data.techSkills || []);
+    if (chkOtherTechSkill && data.otherTechSkillChecked) {
+      chkOtherTechSkill.checked = true;
+      if (otherTechSkillContainer) otherTechSkillContainer.style.display = 'block';
+      if (otherTechSkillInput && data.otherTechSkillText) otherTechSkillInput.value = data.otherTechSkillText;
+    }
+    restoreCheckboxGroup('progLanguages', data.progLanguages || []);
+    if (chkOtherProgLang && data.otherProgLangChecked) {
+      chkOtherProgLang.checked = true;
+      if (otherProgLangContainer) otherProgLangContainer.style.display = 'block';
+      if (otherProgLangInput && data.otherProgLangText) otherProgLangInput.value = data.otherProgLangText;
+    }
+    if (data.skillLevel) {
+      const skillRadio = document.querySelector(`input[name="skillLevel"][value="${data.skillLevel}"]`);
+      if (skillRadio) skillRadio.checked = true;
+    }
+
+    // --- Step 3 ---
+    restoreCheckboxGroup('softSkills', data.softSkills || []);
+    if (chkOtherSoftSkill && data.otherSoftSkillChecked) {
+      chkOtherSoftSkill.checked = true;
+      if (otherSoftSkillContainer) otherSoftSkillContainer.style.display = 'block';
+      if (otherSoftSkillInput && data.otherSoftSkillText) otherSoftSkillInput.value = data.otherSoftSkillText;
+    }
+    if (data.leadershipExp) {
+      const leadershipRadio = document.querySelector(`input[name="leadershipExp"][value="${data.leadershipExp}"]`);
+      if (leadershipRadio) {
+        leadershipRadio.checked = true;
+        if (data.leadershipExp === 'Yes') {
+          if (leadershipDescBox) leadershipDescBox.style.display = 'block';
+          if (leadershipDesc && data.leadershipDescVal) leadershipDesc.value = data.leadershipDescVal;
+        }
+      }
+    }
+    if (form.clubVolunteerExp && data.clubVolunteerExp) form.clubVolunteerExp.value = data.clubVolunteerExp;
+
+    // --- Step 4 ---
+    if (form.track          && data.track)          form.track.value          = data.track;
+    if (form.fecsdcKnowledge && data.fecsdcKnowledge) form.fecsdcKnowledge.value = data.fecsdcKnowledge;
+    if (form.weeklyTime     && data.weeklyTime)     form.weeklyTime.value     = data.weeklyTime;
+    if (form.whyJoin        && data.whyJoin) {
+      form.whyJoin.value = data.whyJoin;
+      // Sync character counter display
+      if (charCountDisplay) charCountDisplay.textContent = String(data.whyJoin.length);
+    }
+    if (form.portfolioUrl   && data.portfolioUrl)   form.portfolioUrl.value   = data.portfolioUrl;
+
+    // --- File restore notices ---
+    const photoNote  = document.getElementById('photoRestoreNote');
+    const resumeNote = document.getElementById('resumeRestoreNote');
+    if (photoNote)  photoNote.style.display  = data.photoWasFilled  ? 'flex' : 'none';
+    if (resumeNote) resumeNote.style.display = data.resumeWasFilled ? 'flex' : 'none';
+
+    // --- Jump to saved step (skip saveFormState during restore) ---
+    const savedStep = parseInt(data.step, 10) || 1;
+    if (savedStep > 1 && savedStep <= TOTAL_STEPS) {
+      goToStep(savedStep);
+    }
+
+  } catch (e) {
+    console.warn('[FormState] Could not restore from localStorage:', e);
+  }
+}
+
+/** Removes the saved form state from localStorage. */
+function clearFormState() {
+  try { localStorage.removeItem(LS_KEY); } catch (e) { /* ignore */ }
+}
+
+/**
+ * Attaches a single delegated event listener to the form element to
+ * auto-save on every input/change across all fields.
+ */
+function initFormAutoSave() {
+  if (!form) return;
+  form.addEventListener('input',  saveFormState);
+  form.addEventListener('change', saveFormState);
+}

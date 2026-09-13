@@ -194,6 +194,16 @@ button, input, select, textarea {
   filter: drop-shadow(0 2px 8px var(--brand-orange-glow));
 }
 
+/* Navbar logo image (replaces SVG monogram in navbar) */
+.brand-logo-img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+  display: block;
+}
+
 .brand-meta {
   display: flex;
   flex-direction: column;
@@ -2225,12 +2235,95 @@ button, input, select, textarea {
   overflow-wrap: anywhere;
 }
 
+/* CV / Resume Encouragement Box */
+.cv-encourage-box {
+  background: linear-gradient(135deg, #fff7ed 0%, #fef9f0 100%);
+  border: 1px solid #fed7aa;
+  border-left: 3.5px solid var(--brand-orange);
+  border-radius: var(--radius-sm);
+  padding: 0.9rem 1.1rem;
+  font-size: 0.82rem;
+  color: var(--text-dark-secondary);
+  line-height: 1.6;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.cv-encourage-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+  color: var(--brand-orange);
+  font-weight: 700;
+  font-size: 0.82rem;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.cv-encourage-link:hover {
+  color: var(--brand-orange-hover);
+  text-decoration: underline;
+}
+
+/* File Restore Notice (photo / resume re-upload prompt after page reload) */
+.file-restore-notice {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.65rem 0.9rem;
+  background-color: #fef3c7;
+  border: 1px solid #fcd34d;
+  border-radius: var(--radius-sm);
+  color: #92400e;
+  font-size: 0.78rem;
+  font-weight: 600;
+  line-height: 1.45;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.file-restore-notice svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #d97706;
+}
+
 /* ==========================================================================
    RESPONSIVE BREAKPOINTS (ALL DEVICES: 320px, 375px, 768px, 1024px, 1440px+)
    ========================================================================== */
 
 /* Mobile (<480px) */
 @media (max-width: 480px) {
+  /* Navbar mobile fixes: prevent overflow, ensure tap targets */
+  .brand-subtitle {
+    display: none; /* Hide subtitle to save space at very small widths */
+  }
+  .brand-logo-img,
+  .brand-logo-svg {
+    width: 34px;
+    height: 34px;
+  }
+  .brand-title {
+    font-size: clamp(0.85rem, 3.5vw, 1.05rem);
+  }
+  .btn-nav-apply {
+    font-size: 0.72rem;
+    padding: 0.5rem 0.8rem;
+    letter-spacing: 0.03em;
+    min-height: 44px; /* WCAG 2.5.5 touch target */
+  }
+  .mobile-toggle {
+    min-width: 44px;
+    min-height: 44px;
+    width: 44px;
+    height: 44px;
+    padding: 10px;
+  }
+  .mobile-drawer .nav-link {
+    padding: 0.75rem 0; /* Min 44px tap area with font-size ~0.95rem */
+    font-size: 1rem;
+  }
   .section-application {
     padding: 2.5rem 0.5rem;
   }
