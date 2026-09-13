@@ -14,7 +14,8 @@
  *
  * NOTE: If left empty, the form operates in "DEMO SIMULATION MODE" so you can
  * visually preview and test the complete submission receipt flow locally.
-// Global APPS_SCRIPT_WEB_APP_URL is loaded from config.js (ignored in Git)
+ * Global APPS_SCRIPT_WEB_APP_URL is loaded from config.js (ignored in Git)
+ */
 
 // File Upload Constraints
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
