@@ -587,7 +587,7 @@ button, input, select, textarea {
   align-items: stretch;
   column-gap: 1.75rem;
   row-gap: 1.75rem;
-  margin-bottom: 4rem;
+  margin-bottom: 5rem; /* Increased to visually separate eligibility strip below */
 }
 
 @media (max-width: 767px) {
@@ -663,25 +663,50 @@ button, input, select, textarea {
   color: #cbd5e1;
 }
 
-/* Key Recruitment Info Matrix */
+/* Key Recruitment Info Matrix
+   ─────────────────────────────────────────────────────────────
+   Visual separation from the .tracks-grid above: extra top spacing
+   + amber top-accent border + slightly elevated background tint
+   so this block reads as a distinct "eligibility" sub-section.
+   ─────────────────────────────────────────────────────────────
+*/
 .recruitment-info-strip {
-  background: linear-gradient(135deg, rgba(20, 24, 36, 0.95) 0%, rgba(28, 33, 50, 0.95) 100%);
-  border: 1px solid var(--brand-navy-border);
+  /* Distinct background – one step lighter than the section bg */
+  background: linear-gradient(135deg, rgba(24, 29, 44, 0.98) 0%, rgba(30, 36, 55, 0.98) 100%);
+  /* Amber top accent to tie it to the section's brand colour */
+  border-top: 2px solid rgba(245, 166, 35, 0.55);
+  border-left: 1px solid var(--brand-navy-border);
+  border-right: 1px solid var(--brand-navy-border);
+  border-bottom: 1px solid var(--brand-navy-border);
   border-radius: var(--radius-md);
-  padding: 2rem;
+  /* Extra top margin reinforces section break from the grid */
+  padding: 2.25rem 2rem;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  /* 3 equal columns on desktop; auto-fit handles intermediate sizes */
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
+  /* Subtle inner glow to lift it off the dark section bg */
+  box-shadow: 0 0 0 1px rgba(245, 166, 35, 0.06), inset 0 1px 0 rgba(245, 166, 35, 0.08);
+}
+
+/* Divider between items on desktop (pseudo vertical rule) */
+.info-item-box + .info-item-box {
+  border-left: 1px solid rgba(75, 74, 94, 0.35);
+  padding-left: 2rem;
 }
 
 .info-item-box {
   display: flex;
   gap: 1rem;
+  align-items: flex-start; /* Icon & text top-aligned, not stretched */
 }
 
 .info-icon {
+  /* Fixed dimensions – never shrink/distort on narrow viewports */
   width: 42px;
   height: 42px;
+  min-width: 42px; /* Prevent flex from squeezing the icon */
+  min-height: 42px;
   border-radius: var(--radius-sm);
   background-color: rgba(245, 166, 35, 0.12);
   border: 1px solid rgba(245, 166, 35, 0.3);
@@ -689,7 +714,12 @@ button, input, select, textarea {
   align-items: center;
   justify-content: center;
   color: var(--brand-amber);
-  flex-shrink: 0;
+  flex-shrink: 0; /* Belt-and-suspenders: also set via min-width */
+}
+
+/* Text content wrapper – take available width */
+.info-item-box > div:last-child {
+  min-width: 0; /* Allows text to wrap rather than push layout */
 }
 
 .info-content-head {
@@ -698,6 +728,7 @@ button, input, select, textarea {
   letter-spacing: 0.08em;
   color: var(--brand-slate-light);
   margin-bottom: 0.25rem;
+  white-space: nowrap; /* Short label, keep on one line */
 }
 
 .info-content-value {
@@ -705,12 +736,17 @@ button, input, select, textarea {
   font-weight: 700;
   color: #ffffff;
   margin-bottom: 0.35rem;
+  /* Prevent long bracketed placeholder from causing overflow */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .info-content-detail {
   font-size: 0.82rem;
   color: #94a3b8;
-  line-height: 1.45;
+  line-height: 1.6; /* Slightly more generous for long paragraph on narrow screens */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 /* --- 7. APPLICATION FORM SECTION (Light Minimalist Theme) --- */
@@ -2334,6 +2370,48 @@ button, input, select, textarea {
     padding: 0.75rem 0; /* Min 44px tap area with font-size ~0.95rem */
     font-size: 1rem;
   }
+
+  /* ── Eligibility Strip – Mobile (<480px) ── */
+  /* Tighten top margin from tracks-grid on small screens */
+  .tracks-grid {
+    margin-bottom: 3.5rem;
+  }
+  .recruitment-info-strip {
+    /* Single-column stack */
+    grid-template-columns: 1fr;
+    gap: 0; /* handled via row borders below */
+    padding: 1.25rem 1rem;
+  }
+  /* Replace vertical divider with horizontal row separator */
+  .info-item-box + .info-item-box {
+    border-left: none;
+    border-top: 1px solid rgba(75, 74, 94, 0.35);
+    padding-left: 0;
+    padding-top: 1.25rem;
+    margin-top: 1.25rem;
+  }
+  .info-item-box {
+    gap: 0.875rem; /* Slightly tighter icon-to-text gap on 320px */
+  }
+  /* Keep icon fixed; don't let flex collapse it */
+  .info-icon {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+  }
+  .info-content-head {
+    font-size: 0.72rem;
+  }
+  .info-content-value {
+    font-size: 0.97rem;
+  }
+  .info-content-detail {
+    font-size: 0.8rem;
+    line-height: 1.65;
+  }
+
+  /* ── Application Form – Mobile ── */
   .section-application {
     padding: 2.5rem 0.5rem;
   }
@@ -2397,6 +2475,26 @@ button, input, select, textarea {
 
 /* Tablet (481px - 768px) */
 @media (min-width: 481px) and (max-width: 768px) {
+  /* ── Eligibility Strip – Tablet ── */
+  /* Single-column stack: readability over cramped 3-col layout */
+  .recruitment-info-strip {
+    grid-template-columns: 1fr;
+    gap: 0;
+    padding: 1.75rem 1.5rem;
+  }
+  /* Horizontal separator between rows (same pattern as mobile) */
+  .info-item-box + .info-item-box {
+    border-left: none;
+    border-top: 1px solid rgba(75, 74, 94, 0.35);
+    padding-left: 0;
+    padding-top: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .info-content-detail {
+    line-height: 1.65;
+  }
+
+  /* ── Application Form – Tablet ── */
   .section-application {
     padding: 3.5rem 1rem;
   }
