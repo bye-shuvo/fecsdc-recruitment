@@ -102,8 +102,6 @@ function doPost(e) {
 
     // Step 4 Fields
     var primaryTrack = (data.track || "General").trim();
-    var fecsdcKnowledge = (data.fecsdcKnowledge || "").trim();
-    var weeklyTime = (data.weeklyTime || "").trim();
     var whyJoin = (data.whyJoin || "").trim();
     var portfolioUrl = (data.portfolioUrl || "N/A").trim();
 
@@ -114,7 +112,7 @@ function doPost(e) {
     var resumeFileName = (data.resumeFileName || "Resume_" + studentId + ".pdf").trim();
 
     // 4. Validate mandatory fields
-    if (!fullName || !studentId || !batch || !gender || !department || !yearSemester || !phone || !email || !photoBase64 || !technicalSkills || !programmingLanguages || !skillLevel || !softSkills || !primaryTrack || !fecsdcKnowledge || !weeklyTime || !whyJoin || !resumeBase64) {
+    if (!fullName || !studentId || !batch || !gender || !department || !yearSemester || !phone || !email || !photoBase64 || !technicalSkills || !programmingLanguages || !skillLevel || !softSkills || !primaryTrack || !whyJoin || !resumeBase64) {
       return createJsonResponse({
         status: "error",
         message: "Missing mandatory fields. Please ensure all required fields across Steps 1 to 4 are completed."
@@ -248,7 +246,7 @@ function doPost(e) {
     var applicantRefId = "FECSDC-2026-" + ("0000" + (sheet.getLastRow())).slice(-4);
 
     // 10. Append candidate row to Sheet
-    // Columns (25 total):
+    // Columns (23 total):
     // 1. Application ID
     // 2. Submission Time
     // 3. Student ID (Column C - STUDENT_ID_COL_INDEX = 3)
@@ -268,12 +266,10 @@ function doPost(e) {
     // 17. Leadership Description
     // 18. Club / Volunteer Experience
     // 19. Preferred Track
-    // 20. FEC SDC Knowledge & Contribution
-    // 21. Weekly Time Commitment
-    // 22. Why Join Statement
-    // 23. Resume Drive Link
-    // 24. Portfolio / GitHub
-    // 25. Review Status (Default: Pending Review)
+    // 20. Why Join Statement
+    // 21. Resume Drive Link
+    // 22. Portfolio / GitHub
+    // 23. Review Status (Default: Pending Review)
     sheet.appendRow([
       applicantRefId,
       formattedDate,
@@ -294,8 +290,6 @@ function doPost(e) {
       leadershipDesc,
       clubVolunteerExp,
       primaryTrack,
-      fecsdcKnowledge,
-      weeklyTime,
       whyJoin,
       fileViewUrl,
       portfolioUrl,
@@ -304,7 +298,7 @@ function doPost(e) {
 
     // Format the newly appended row
     var lastRow = sheet.getLastRow();
-    sheet.getRange(lastRow, 1, 1, 25).setVerticalAlignment("middle");
+    sheet.getRange(lastRow, 1, 1, 23).setVerticalAlignment("middle");
     
     // 11. Return success response
     return createJsonResponse({
@@ -384,8 +378,6 @@ function setupHeaders(sheet) {
     "Leadership Description",
     "Club / Volunteer Experience",
     "Preferred Track",
-    "FEC SDC Knowledge & Contribution",
-    "Weekly Time Commitment",
     "Why Join Statement",
     "Resume Drive Link",
     "Portfolio / GitHub",
@@ -428,10 +420,8 @@ function setupHeaders(sheet) {
   sheet.setColumnWidth(17, 240); // Leadership Desc
   sheet.setColumnWidth(18, 240); // Club / Volunteer
   sheet.setColumnWidth(19, 170); // Preferred Track
-  sheet.setColumnWidth(20, 260); // FECSDC Knowledge & Contribution
-  sheet.setColumnWidth(21, 170); // Weekly Time Commitment
-  sheet.setColumnWidth(22, 260); // Why Join
-  sheet.setColumnWidth(23, 240); // Resume Link
-  sheet.setColumnWidth(24, 200); // Portfolio
-  sheet.setColumnWidth(25, 130); // Status
+  sheet.setColumnWidth(20, 260); // Why Join
+  sheet.setColumnWidth(21, 240); // Resume Link
+  sheet.setColumnWidth(22, 200); // Portfolio
+  sheet.setColumnWidth(23, 130); // Status
 }

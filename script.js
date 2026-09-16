@@ -931,25 +931,11 @@ function validateStep(step) {
   // -------------------------------------------------------------
   if (step === 4) {
     const track = form.track ? form.track.value : "";
-    const fecsdcKnowledge = form.fecsdcKnowledge ? form.fecsdcKnowledge.value.trim() : "";
-    const weeklyTime = form.weeklyTime ? form.weeklyTime.value : "";
     const whyJoin = form.whyJoin ? form.whyJoin.value.trim() : "";
 
     if (!track) {
       showError("Please select your primary division track of interest.");
       if (form.track) form.track.focus();
-      return false;
-    }
-
-    if (!fecsdcKnowledge || fecsdcKnowledge.length < 30) {
-      showError("Please share what you know about FECSDC & how you will contribute (minimum 30 characters).");
-      if (form.fecsdcKnowledge) form.fecsdcKnowledge.focus();
-      return false;
-    }
-
-    if (!weeklyTime) {
-      showError("Please select your weekly time commitment.");
-      if (form.weeklyTime) form.weeklyTime.focus();
       return false;
     }
 
@@ -1051,16 +1037,12 @@ function buildReviewSummary() {
   // Section 4: Motivation & Documents
   if (reviewMotivationInfoGrid) {
     const track = form.track ? form.track.value : "--";
-    const weeklyTime = form.weeklyTime ? form.weeklyTime.value : "--";
-    const fecsdcKnowledge = form.fecsdcKnowledge ? form.fecsdcKnowledge.value.trim() : "";
     const whyJoin = form.whyJoin ? form.whyJoin.value.trim() : "";
     const resumeName = selectedResumeFile ? selectedResumeFile.name : "No PDF selected";
     const portfolioUrl = form.portfolioUrl ? form.portfolioUrl.value.trim() : "";
 
     reviewMotivationInfoGrid.innerHTML = `
       <div class="review-item"><span class="review-k">Primary Division Track</span><span class="review-v badge-highlight">${escapeHtml(track)}</span></div>
-      <div class="review-item"><span class="review-k">Weekly Commitment</span><span class="review-v">${escapeHtml(weeklyTime)}</span></div>
-      <div class="review-item review-full-width"><span class="review-k">FEC SDC Knowledge & Contribution</span><span class="review-v">${escapeHtml(fecsdcKnowledge)}</span></div>
       <div class="review-item review-full-width"><span class="review-k">Why Join Statement</span><span class="review-v">${escapeHtml(whyJoin)}</span></div>
       <div class="review-item"><span class="review-k">Resume File</span><span class="review-v font-mono">📄 ${escapeHtml(resumeName)}</span></div>
       <div class="review-item"><span class="review-k">Portfolio / GitHub</span><span class="review-v">${portfolioUrl ? `<a href="${escapeHtml(portfolioUrl)}" target="_blank" rel="noopener noreferrer">${escapeHtml(portfolioUrl)}</a>` : "N/A"}</span></div>
@@ -1115,8 +1097,6 @@ function initFormSubmission() {
 
     // Step 4 values
     const track = form.track.value;
-    const fecsdcKnowledge = form.fecsdcKnowledge.value.trim();
-    const weeklyTime = form.weeklyTime.value;
     const whyJoin = form.whyJoin.value.trim();
     const portfolioUrl = form.portfolioUrl ? form.portfolioUrl.value.trim() : "";
 
@@ -1140,8 +1120,6 @@ function initFormSubmission() {
       leadershipDesc: leadershipDescVal,
       clubVolunteerExp: clubVolunteerExp,
       track: track,
-      fecsdcKnowledge: fecsdcKnowledge,
-      weeklyTime: weeklyTime,
       whyJoin: whyJoin,
       resumeFileName: selectedResumeFile.name,
       resumeBase64: resumeBase64String,
@@ -1350,8 +1328,6 @@ function saveFormState() {
       clubVolunteerExp:     (form.clubVolunteerExp && form.clubVolunteerExp.value) || '',
       // Step 4
       track:           (form.track          && form.track.value)          || '',
-      fecsdcKnowledge: (form.fecsdcKnowledge && form.fecsdcKnowledge.value) || '',
-      weeklyTime:      (form.weeklyTime      && form.weeklyTime.value)      || '',
       whyJoin:         (form.whyJoin         && form.whyJoin.value)         || '',
       portfolioUrl:    (form.portfolioUrl    && form.portfolioUrl.value)    || '',
       // File presence flags (base64 not stored)
@@ -1438,8 +1414,6 @@ function restoreFormState() {
 
     // --- Step 4 ---
     if (form.track          && data.track)          form.track.value          = data.track;
-    if (form.fecsdcKnowledge && data.fecsdcKnowledge) form.fecsdcKnowledge.value = data.fecsdcKnowledge;
-    if (form.weeklyTime     && data.weeklyTime)     form.weeklyTime.value     = data.weeklyTime;
     if (form.whyJoin        && data.whyJoin) {
       form.whyJoin.value = data.whyJoin;
       // Sync character counter display
