@@ -136,6 +136,37 @@
           </a>
         </div>
 
+        <!-- Application Deadline Countdown (Featured) -->
+        <div class="deadline-countdown-banner" id="deadlineCountdownBanner">
+          <div class="countdown-banner-label">
+            <span class="countdown-pulse-dot"></span>
+            Application Deadline
+          </div>
+          <div class="countdown-banner-timer" id="countdownBannerTimer">
+            <div class="countdown-unit">
+              <span class="countdown-num" id="cdDays">--</span>
+              <span class="countdown-unit-label">Days</span>
+            </div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit">
+              <span class="countdown-num" id="cdHours">--</span>
+              <span class="countdown-unit-label">Hours</span>
+            </div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit">
+              <span class="countdown-num" id="cdMinutes">--</span>
+              <span class="countdown-unit-label">Minutes</span>
+            </div>
+            <span class="countdown-sep">:</span>
+            <div class="countdown-unit">
+              <span class="countdown-num" id="cdSeconds">--</span>
+              <span class="countdown-unit-label">Seconds</span>
+            </div>
+          </div>
+          <div class="countdown-banner-subtext" id="countdownBannerSubtext">23:59 UTC+6 (Sharp) — [DEADLINE: SEP 26]
+          </div>
+        </div>
+
         <!-- Live Technical Stats Strip -->
         <div class="hero-metadata-grid">
           <div class="meta-metric-card">
@@ -146,14 +177,8 @@
 
           <div class="meta-metric-card">
             <span class="meta-label">Eligibility Window</span>
-            <span class="meta-value">1st & 2nd Year</span>
+            <span class="meta-value">Batch 12</span>
             <span style="font-size:0.7rem; color:#94a3b8;">CSE • EEE • Civil Eng.</span>
-          </div>
-
-          <div class="meta-metric-card">
-            <span class="meta-label">Application Deadline</span>
-            <span class="meta-value meta-highlight">[DEADLINE: OCT 15]</span>
-            <span style="font-size:0.7rem; color:#94a3b8;">23:59 UTC+6 (Sharp)</span>
           </div>
 
           <div class="meta-metric-card">
@@ -286,7 +311,7 @@
             </div>
             <div>
               <div class="info-content-head">Eligibility Criteria</div>
-              <div class="info-content-value">[ELIGIBILITY: 1st & 2nd Year Students]</div>
+              <div class="info-content-value">[ELIGIBILITY: 12 Batch Students]</div>
               <div class="info-content-detail">
                 Regularly enrolled students of Faridpur Engineering College across CSE, EEE, or Civil Engineering. Must
                 have curiosity, commitment, and drive to learn.
@@ -304,7 +329,7 @@
             </div>
             <div>
               <div class="info-content-head">Recruitment Timeline</div>
-              <div class="info-content-value">[DEADLINE: 15 Oct, 2026]</div>
+              <div class="info-content-value">[DEADLINE: 26 Sep, 2026]</div>
               <div class="info-content-detail">
                 Form Submission closes at 11:59 PM. Shortlisted candidates will be invited for practical evaluation &
                 technical interviews within 7 days.
@@ -1245,6 +1270,8 @@
   <script src="config.js"></script>
   <!-- Application Logic -->
   <script src="script.js"></script>
+  <!-- Application Deadline Countdown -->
+  <script src="countdown.js"></script>
 </body>
 
 </html>

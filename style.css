@@ -552,6 +552,172 @@ button, input, select, textarea {
   color: var(--brand-amber);
 }
 
+/* ==========================================================================
+   Featured Application Deadline Live Countdown Banner
+   ========================================================================== */
+.deadline-countdown-banner {
+  width: 100%;
+  background: linear-gradient(180deg, rgba(28, 33, 50, 0.82) 0%, rgba(20, 24, 36, 0.92) 100%);
+  border: 1px solid rgba(245, 166, 35, 0.28);
+  border-radius: var(--radius-md);
+  padding: 1.6rem 1.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 25px -10px rgba(245, 166, 35, 0.12);
+  animation: countdown-banner-glow 4s ease-in-out infinite;
+  backdrop-filter: blur(8px);
+}
+
+@keyframes countdown-banner-glow {
+  0%, 100% {
+    border-color: rgba(245, 166, 35, 0.25);
+    box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 25px -10px rgba(245, 166, 35, 0.12);
+  }
+  50% {
+    border-color: rgba(244, 123, 50, 0.5);
+    box-shadow: 0 12px 35px -8px rgba(0, 0, 0, 0.6), 0 0 35px -5px rgba(244, 123, 50, 0.22);
+  }
+}
+
+.countdown-banner-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand-slate-light);
+  margin-bottom: 1rem;
+}
+
+.countdown-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--brand-orange);
+  box-shadow: 0 0 10px var(--brand-orange);
+  animation: pulse-dot 1.5s infinite ease-in-out;
+  display: inline-block;
+}
+
+.countdown-banner-timer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(0.5rem, 2.5vw, 1.75rem);
+}
+
+.countdown-unit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: clamp(55px, 12vw, 95px);
+}
+
+.countdown-num {
+  font-family: var(--font-mono);
+  font-size: clamp(2.2rem, 5.5vw, 3.5rem);
+  font-weight: 800;
+  line-height: 1;
+  color: #ffffff;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  text-shadow: 0 0 24px rgba(245, 166, 35, 0.25);
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+.countdown-num.tick {
+  animation: cd-digit-tick 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes cd-digit-tick {
+  0% {
+    transform: translateY(-5px) scale(1.08);
+    opacity: 0.7;
+    color: var(--brand-amber);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    color: #ffffff;
+  }
+}
+
+.countdown-unit-label {
+  font-size: clamp(0.65rem, 1.4vw, 0.75rem);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--brand-slate-light);
+  margin-top: 0.45rem;
+}
+
+.countdown-sep {
+  font-family: var(--font-mono);
+  font-size: clamp(1.6rem, 4vw, 2.5rem);
+  font-weight: 700;
+  color: var(--brand-amber);
+  opacity: 0.85;
+  margin-bottom: 1.1rem;
+  user-select: none;
+}
+
+.countdown-banner-subtext {
+  font-size: 0.78rem;
+  color: #94a3b8;
+  margin-top: 1.1rem;
+  letter-spacing: 0.04em;
+}
+
+/* Expired state */
+.deadline-countdown-banner.deadline-expired {
+  animation: none;
+  border-color: var(--brand-navy-border);
+  box-shadow: none;
+  opacity: 0.75;
+}
+
+.deadline-countdown-banner.deadline-expired .countdown-pulse-dot {
+  animation: none;
+  background-color: var(--brand-slate-light);
+  box-shadow: none;
+}
+
+.countdown-expired-msg {
+  font-family: var(--font-mono);
+  font-size: clamp(1.4rem, 4vw, 2.25rem);
+  font-weight: 800;
+  color: var(--brand-slate-light);
+  letter-spacing: 0.05em;
+  padding: 0.5rem 0;
+  text-transform: uppercase;
+}
+
+@media (max-width: 600px) {
+  .deadline-countdown-banner {
+    padding: 1.25rem 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+  .countdown-banner-timer {
+    gap: 0.35rem;
+  }
+  .countdown-unit {
+    min-width: 48px;
+  }
+  .countdown-num {
+    font-size: clamp(1.6rem, 6.8vw, 2.2rem);
+  }
+  .countdown-sep {
+    font-size: clamp(1.2rem, 4.5vw, 1.7rem);
+    margin-bottom: 0.85rem;
+  }
+}
+
 /* --- 6. ABOUT & ROLES SECTION --- */
 .section-roles {
   padding: 6rem 0;
