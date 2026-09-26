@@ -15,7 +15,7 @@
    * Format: YYYY-MM-DDTHH:mm:ss+06:00
    * Editable timestamp for application cutoff
    */
-  const APPLICATION_DEADLINE = new Date("2026-09-26T23:59:00+06:00");
+  const APPLICATION_DEADLINE = new Date("2026-09-27T01:00:00+06:00");
 
   let timerInterval = null;
   const prevValues = { days: null, hours: null, minutes: null, seconds: null };
