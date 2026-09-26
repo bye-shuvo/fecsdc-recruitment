@@ -19,7 +19,7 @@
    */
   const APPLICATION_DEADLINE = window.APPLICATION_DEADLINE
     ? new Date(window.APPLICATION_DEADLINE)
-    : new Date("2026-09-26T23:59:00+06:00");
+    : new Date("2026-09-27T01:00:00+06:00");
 
   let checkInterval = null;
 
